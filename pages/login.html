@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../style.css">
+    <title>App</title>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <div class="nav-logo">Kalimotova</div>
+                <div class="nav-links">
+                    <a href="/" class="nav-link">Home</a>
+                    <a href="login" class="nav-link">Login</a>
+                    <a href="register" class="nav-link">Register</a>
+                </div>
+            </nav>
+            <div class="header-inner">
+                <form class="reg-form" id="regForm" action="/login" method="POST">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" placeholder="Username" required>
+                    <br>
+            
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" placeholder="Password" required>
+                    <br>
+
+                    <input type="button" value="Login" onclick="postData()">
+                    <label for="result" id="result"></label>    
+                </form>
+            </div>
+        </div>
+    </header>
+    <script>
+        /**
+        * Asynchronous function to send user registration data to the server.
+        */
+        async function postData() {
+            // Get the values of username, email, password, and confirmPassword from HTML elements.
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            // Get the result element where the server response will be displayed.
+            const result = document.getElementById('result');
+
+            // Prepare the data to be sent in the request body.
+            const dataToSend = {
+                username,
+                password
+            };
+
+            try {
+                // Send a POST request to the "/register" endpoint with the user registration data.
+                const response = await fetch("/login", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(dataToSend)
+                });
+
+                // Parse the JSON response from the server.
+                const data = await response.json();
+
+                // Display the server message in the result element.
+                result.innerHTML = data.message;
+            } catch (error) {
+                // Handle any errors that occur during the fetch operation.
+                console.error('Error:', error);
+            }
+        }
+
+    </script>
+</body>
+</html>

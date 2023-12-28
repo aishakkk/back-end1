@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/style.css">
+    <title>App</title>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <div class="nav-logo">Kalimotova</div>
+                <div class="nav-links">
+                    <a href="/" class="nav-link">Home</a>
+                    <a href="login" class="nav-link">Login</a>
+                    <a href="register" class="nav-link">Register</a>
+                </div>
+            </nav>
+            <div class="header-inner">
+                <form class="reg-form" id="regForm" action="/register" method="POST">
+                    <!-- Username Field -->
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" required>
+                    <br>
+            
+                    <!-- Full Name Field -->
+                    <label for="fullname">Full Name:</label>
+                    <input type="text" id="fullname" name="fullname" required>
+                    <br>
+            
+                    <!-- Email Field -->
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required>
+                    <br>
+            
+                    <!-- Password Field -->
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" required>
+                    <br>
+            
+                    <!-- Confirm Password Field -->
+                    <label for="confirm_password">Confirm Password:</label>
+                    <input type="password" id="confirmPassword" name="confirm_password" required>
+                    <br>
+            
+                    <!-- Submit Button -->
+                    <input type="button" value="Register" onclick="postData()">
+                    <label for="result" id="result"></label>    
+                </form>
+            </div>
+        </div>
+    </header>
+    <script>
+        /**
+        * Asynchronous function to send user registration data to the server.
+        */
+        async function postData() {
+            // Get the values of username, email, password, and confirmPassword from HTML elements.
+            const username = document.getElementById('username').value;
+            const fullname = document.getElementById('fullname').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            // Get the result element where the server response will be displayed.
+            const result = document.getElementById('result');
+
+            // Check if the entered passwords match.
+            if (password !== confirmPassword) {
+                result.innerHTML = 'Passwords do not match';
+                return; // Exit the function if passwords don't match.
+            }
+
+            // Prepare the data to be sent in the request body.
+            const dataToSend = {
+                username,
+                fullname,
+                email,
+                password
+            };
+
+            try {
+                // Send a POST request to the "/register" endpoint with the user registration data.
+                const response = await fetch("/register", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(dataToSend)
+                });
+
+                // Parse the JSON response from the server.
+                const data = await response.json();
+
+                // Display the server message in the result element.
+                result.innerHTML = data.message;
+            } catch (error) {
+                // Handle any errors that occur during the fetch operation.
+                console.error('Error:', error);
+            }
+        }
+
+    </script>
+</body>
+</html>
